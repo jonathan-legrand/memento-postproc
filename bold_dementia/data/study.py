@@ -25,7 +25,6 @@ def load_signals(
                 ts,
                 sample_mask=sample_mask,
                 confounds=confounds,
-                standardize="zscore_sample",
                 **clean_kwargs
             )
         else:
