@@ -59,14 +59,8 @@ def create_maps(run_config):
 import sys
 
 if __name__ == "__main__":
-    try:
-        run_config = get_config(sys.argv[1])
-        print("Loaded custom config :")
-    except IndexError:
-        run_config = config["default_run"]
-        print("No config path provided, using default :")
+    run_config = get_config(sys.argv[1])
     print(run_config)
-    
     p = create_maps(run_config)
     print(f"Saved output in {p}")
 
