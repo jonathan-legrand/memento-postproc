@@ -1,16 +1,11 @@
-import warnings
 from pathlib import Path
 import joblib
-
-import numpy.linalg as npl
-
-from sklearn.utils import Bunch
 from sklearn import covariance
 from nilearn.connectome import ConnectivityMeasure
+from neuroginius.atlas import Atlas
+
 from bold_dementia.data.study import load_signals
 from bold_dementia.data.memento import MementoTS
-
-from neuroginius.atlas import Atlas
 from bold_dementia import get_config
 from bold_dementia.utils.saving import save_run
 
