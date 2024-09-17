@@ -20,7 +20,7 @@ def compute_and_cache_ts(atlas:Atlas, bids_dir:Path, ppath:Path):
         bids_dir,
         ppath,
         atlas=atlas,
-        cache_dir=bids_dir / "derivatives" / (atlas.name + "_" + "soft-" + str(atlas.is_soft) + "_" + psuffix + "DEBUG"),
+        cache_dir=bids_dir / "derivatives" / (atlas.name + "_" + "soft-" + str(atlas.is_soft) + "_" + psuffix),
     )
     if atlas.is_soft:
         print("is_soft is True, default to serial caching")
