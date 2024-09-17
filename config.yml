@@ -1,0 +1,28 @@
+# Non standard yml, to be parsed with https://github.com/mkaranasou/pyaml_env
+#DATA PATH
+data_dir: !ENV ${HOME}/data/Memento
+output_dir: !ENV ${HOME}/data/Memento/output
+bids_dir: "/georges/memento/BIDS"
+statresults: !ENV ${HOME}/data/Memento/output/statresults
+connectivity_matrices: !ENV ${HOME}/data/Memento/output/connectivity
+custom_atlases : !ENV ${HOME}/data/Memento/atlas
+parcellations : !ENV ${HOME}/data/Memento/output/parcellations
+
+# CREATE MAPS DEFAULT RUN
+default_run:
+  confounds_strategy:
+    strategy: ["high_pass", "motion", "wm_csf"]
+    wm_csf: "full"
+  SOFT: False
+  ATLAS: "schaeffer200"
+  CLEAN_SIGNAL: True
+  MACRO_LABELS: True
+  NAME: "default"
+  BALANCE_STRAT: []
+
+
+#TESTS
+seed: 1234
+age_tol: 1
+sex_prop_tol: 0.1
+alpha: 0.05
