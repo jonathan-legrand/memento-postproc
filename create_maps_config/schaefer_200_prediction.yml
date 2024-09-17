@@ -1,5 +1,11 @@
 confounds_strategy:
   strategy: ["high_pass", "motion", "wm_csf", "global_signal"]
+  fd_threshold: 0.5 # Match fMRIprep's defaults
+clean_kwargs:
+ # Filtering is performed with cosine drifts from loaded from fMRIprep
+  filter: False
+  standardize: "zscore_sample"
+
 atlas_name: "schaefer200"
 output_suffix: "debug"
 cache_dir: "/georges/memento/BIDS/derivatives/schaefer200_merged_phenotypes"
