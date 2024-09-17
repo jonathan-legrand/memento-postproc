@@ -1,12 +1,7 @@
 import warnings
 from pathlib import Path
-import os
-import json
 import joblib
 
-import pandas as pd
-import nibabel as nib
-import numpy as np
 import numpy.linalg as npl
 
 from sklearn.utils import Bunch
@@ -21,28 +16,6 @@ from bold_dementia.utils.saving import save_run
 
 config = get_config()
 
-
-def compute_cov_prec(time_series, kind="covariance"):
-
-    print(f"Computing {kind} measure...", end=" ")
-    pipe = ConnectivityMeasure(
-        covariance.LedoitWolf(),
-        kind=kind
-    )
-    c = pipe.fit_transform(time_series)
-    p = npl.inv(c)
-
-    bunch = Bunch(
-        covariances_=c,
-        precisions_=p
-    )
-    print("Done")
-    return bunch
-
-
-# TODO Simplify matrix calculation for the passation
-# (=> creating a new project?) and ensure that fMRIprep's
-# default thresh of 0.5mm FD is respected (vilain nilearn)
 def create_maps(run_config):
     atlas = Atlas.from_name(
         run_config["atlas_name"],
@@ -56,14 +29,14 @@ def create_maps(run_config):
 
     memento = MementoTS(cache_dir=cache_dir, target_func=lambda row: row)
 
-    with warnings.catch_warnings(category=FutureWarning, action="ignore"):
-        time_series, metadata = load_signals(
-            memento,
-            confounds_strategy=run_config["confounds_strategy"]
-        )
+    time_series, metadata = load_signals(
+        memento,
+        confounds_strategy=run_config["confounds_strategy"],
+        clean_kwargs=run_config["clean_kwargs"]
+    )
 
     n = len(time_series)
-    print(f"Study on {n} subjects")
+    print(f"Study on {n} scans")
     
     kind = run_config["kind"] if "kind" in run_config.keys() else "covariance"
     print(f"Computing connectivity with {kind}", end="... ")

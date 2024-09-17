@@ -8,7 +8,12 @@ import json
 from pathlib import Path
 
 
-def load_signals(dataset, clean_signal=True, confounds_strategy=None, **clean_kwargs):
+def load_signals(
+    dataset,
+    clean_signal=True,
+    confounds_strategy=None,
+    clean_kwargs=None
+    ):
     processed_ts, meta = [], []
     for ts, row, fpath in iter(dataset):
         print(f"Processing {fpath}")
