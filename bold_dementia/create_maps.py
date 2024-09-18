@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 import joblib
 from sklearn import covariance
 from nilearn.connectome import ConnectivityMeasure
@@ -33,15 +34,20 @@ def create_maps(run_config):
     n = len(time_series)
     print(f"Study on {n} scans")
     
-    kind = run_config["kind"] if "kind" in run_config.keys() else "covariance"
+    kind = run_config["kind"]
+    print()
     print(f"Computing connectivity with {kind}", end="... ")
 
     pipe = ConnectivityMeasure(
         covariance.LedoitWolf(),
         kind=kind
     )
+    print(pipe)
+    start = time.time()
     connectivities = pipe.fit_transform(time_series)
         
+    end = time.time()
+    print(f"Elapsed during mat estimation : {end-start}")
     print("Finished, exporting results")
 
     joblib_export = {
