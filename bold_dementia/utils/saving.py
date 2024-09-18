@@ -23,7 +23,7 @@ def save_run(
         Path: path of the folder containing all the saved objects
     """
 
-    name = f"atlas-{run_config['atlas']}_{run_config['output_suffix']}"
+    name = f"atlas-{run_config['atlas_name']}_{run_config['output_suffix']}"
 
     experience_path = Path(config[dirkey]) / name
 
