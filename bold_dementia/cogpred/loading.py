@@ -68,9 +68,9 @@ def make_dask_data(conn_dir, atlas, k, test_centre="GOX"):
 
 
 # TODO where to put those cluster labels? 
-def make_training_data(conn_dir, atlas, k, test_centre="GOX"):
-    matrices = joblib.load(f"{conn_dir}/atlas-{atlas}_corr/connectivities.joblib")
-    metadata = pd.read_csv(f"{conn_dir}/atlas-{atlas}_corr/metadata.csv", index_col=0)
+def make_training_data(conn_dir, atlas, k, test_centre="GOX", suffix="prediction"):
+    matrices = joblib.load(f"{conn_dir}/atlas-{atlas}_{suffix}/connectivities.joblib")
+    metadata = pd.read_csv(f"{conn_dir}/atlas-{atlas}_{suffix}/metadata.csv", index_col=0)
     labels = pd.read_csv(f"/georges/memento/BIDS/cluster_{k}_labels.csv", index_col=0)
 
     baseline_msk = (metadata.ses == "M000")
