@@ -17,3 +17,6 @@ python bold_dementia/create_maps.py create_maps_config/schaefer200_prediction.ya
 ```
 The result is stored in the `output_dir`
 specified in the root level config file `config.yml`.
+
+## Null distributions
+**TODO**
