@@ -4,7 +4,7 @@ data_dir: !ENV ${HOME}/data/Memento
 output_dir: output
 bids_dir: "/georges/memento/BIDS"
 statresults: !ENV ${HOME}/data/Memento/output/statresults
-connectivity_matrices: !ENV ${HOME}/data/Memento/output/connectivity
+connectivity_matrices: connectivity
 custom_atlases : !ENV ${HOME}/data/Memento/atlas
 parcellations : !ENV ${HOME}/data/Memento/output/parcellations
 
