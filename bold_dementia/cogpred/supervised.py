@@ -1,6 +1,7 @@
 from scipy import stats
 import numpy as np
 from sklearn.metrics import make_scorer, f1_score, confusion_matrix, classification_report
+import joblib
 
 def run_cv_perms(estimator, matrices, metadata, cv):
     y = metadata.cluster_label.values.astype(int)
@@ -46,7 +47,7 @@ def run_cv(estimator, matrices, metadata, cv, score_func=partial_f1_func):
     maps = []
     cm = np.zeros((n_classes, n_classes), dtype=int)
 
-    for train_idx, test_idx in cv.split(matrices, y, groups=metadata.CEN_ANOM.values):
+    for i, (train_idx, test_idx) in enumerate(cv.split(matrices, y, groups=metadata.CEN_ANOM.values)):
         X_train, y_train = matrices[train_idx], y[train_idx]
         X_test, y_test = matrices[test_idx], y[test_idx]
         estimator.fit(X_train, y_train)
@@ -71,6 +72,7 @@ def run_cv(estimator, matrices, metadata, cv, score_func=partial_f1_func):
         patterns = sigma_X @ W
 
         maps.append(patterns)
+        joblib.dump(estimator, f"output/estimator_{i}.joblib")
     
     hmat = np.stack(maps, axis=0)
     return scores, cm, hmat
