@@ -122,8 +122,8 @@ def plot_matrix(
                 ticks.append(i)
                 lbls.append(label)
                 prev_label = label
-                axes.hlines(i, 0, n_regions, colors="black", linestyles="dotted", linewidths=3)
-                axes.vlines(i, 0, n_regions, colors="black", linestyles="dotted", linewidths=3)
+                axes.hlines(i, 0, n_regions, colors="black", linestyles="dotted", linewidths=2)
+                axes.vlines(i, 0, n_regions, colors="black", linestyles="dotted", linewidths=2)
 
         ticks.append(i + 1)
 
