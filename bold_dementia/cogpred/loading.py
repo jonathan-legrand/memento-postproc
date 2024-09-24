@@ -66,8 +66,20 @@ def make_dask_data(conn_dir, atlas, k, test_centre="GOX"):
 
     return matrices, metadata
 
+def make_all_data(conn_dir, atlas, k, suffix="prediction"):
+    matrices = joblib.load(f"{conn_dir}/atlas-{atlas}_{suffix}/connectivities.joblib")
+    metadata = pd.read_csv(f"{conn_dir}/atlas-{atlas}_{suffix}/metadata.csv", index_col=0)
+    labels = pd.read_csv(f"/georges/memento/BIDS/cluster_{k}_labels.csv", index_col=0)
 
-# TODO where to put those cluster labels? 
+    metadata = metadata.merge(
+        right=labels,
+        how="left", # Preserves order of the left key
+        on="NUM_ID",
+        validate="many_to_one"
+    )
+
+    return matrices, metadata
+
 def make_training_data(conn_dir, atlas, k, test_centre="GOX", suffix="prediction"):
     matrices = joblib.load(f"{conn_dir}/atlas-{atlas}_{suffix}/connectivities.joblib")
     metadata = pd.read_csv(f"{conn_dir}/atlas-{atlas}_{suffix}/metadata.csv", index_col=0)
