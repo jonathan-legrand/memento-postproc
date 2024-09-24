@@ -33,4 +33,13 @@ The result is stored in the `output_dir`
 specified in the root level config file `config.yml`.
 
 ## Null distributions
-**TODO**
+We use permutation testing to assess : 
+- Model performance
+- Model weights significance
+
+Null distributions are generated with `generate_null_nodask.py`.
+For instance, to get 1000 permutations for classification from all schaefer200 atlas regions: 
+
+```python bold_dementia/generate_null_nodask.py all all --n_jobs 2 --n_permutations 1000```
+
+Call with `--help` option to get detailed description of possible options and defaults.
