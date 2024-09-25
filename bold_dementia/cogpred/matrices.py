@@ -1,14 +1,18 @@
 import math
+import itertools as it
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FixedLocator
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from nilearn.maskers import NiftiLabelsMasker
+from nilearn.connectome.connectivity_matrices import vec_to_sym_matrix
 
 from neuroginius.networks import group_by_networks
 from neuroginius.atlas import Atlas
 from neuroginius.iterables import unique
-import itertools as it
+
+from bold_dementia.cogpred import MatrixMasker
 
 def default_agg_func(block):
     return (block.mean(),)
@@ -146,3 +150,63 @@ def plot_matrix(
         axes.set_xticklabels(lbls, rotation=30)
 
     return axes
+
+def region_split(label):
+    return label.split("_")[-2]
+
+class MockAtlas:
+    def __init__(self, regions) -> None:
+        self.macro_labels = list(map(region_split, regions))
+
+def extract_net(mat, atlas, network):
+    # Get region labels
+    label_msk = np.array(atlas.macro_labels) == network
+    regions = np.array(atlas.labels[label_msk])
+    regions = list(np.array(regions).astype(str))
+
+    # Extract vector and reproject to matrix
+    net_masker = MatrixMasker((network,), (network,))
+    if mat.ndim == 2:
+        mat = mat.reshape((1, *mat.shape))
+    res = net_masker.fit_transform(mat).squeeze()
+    reprojected = vec_to_sym_matrix(res, diagonal=np.zeros((len(regions))))
+    return reprojected, regions
+
+def plot_network(mat, atlas, network, ax=None, **plot_kws):
+    reprojected, regions = extract_net(mat, atlas, network)
+
+    mock_atlas = MockAtlas(regions)
+    
+    if ax is None:
+        f, ax = plt.subplots(figsize=(8, 6))
+    plot_matrix(reprojected, mock_atlas, axes=ax, **plot_kws)
+    ax.set_xticklabels(np.unique(mock_atlas.macro_labels), rotation=90)
+    return ax, reprojected
+
+# Too many arguments passing between
+# net_to_brain and extract_net,
+# perhaps worth refactoring as object
+def net_to_brain(matrix, atlas, refnet):
+    reprojected, regions = extract_net(matrix, atlas, refnet)
+    
+    centralities = []
+    for i, r in enumerate(regions):
+        centralities.append(
+            reprojected[i, :].sum() / 2
+        )
+
+    padded_centralities = []
+    pointer = 0
+    for net in atlas.macro_labels:
+        if net == refnet:
+            padded_centralities.append(centralities[pointer])
+            pointer += 1
+        else:
+            padded_centralities.append(0)
+    
+    padded_centralities = np.array(padded_centralities)
+
+    masker = NiftiLabelsMasker(atlas.maps)
+    masker.fit()
+    img = masker.inverse_transform(padded_centralities)
+    return img
