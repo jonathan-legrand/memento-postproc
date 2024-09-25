@@ -160,7 +160,7 @@ class MockAtlas:
     def __init__(self, regions) -> None:
         self.macro_labels = list(map(region_split, regions))
 
-def extract_net(mat, atlas, network):
+def extract_vec(mat, atlas, network):
     # Get region labels
     label_msk = np.array(atlas.macro_labels) == network
     regions = np.array(atlas.labels[label_msk])
@@ -171,6 +171,10 @@ def extract_net(mat, atlas, network):
     if mat.ndim == 2:
         mat = mat.reshape((1, *mat.shape))
     res = net_masker.fit_transform(mat).squeeze()
+    return res, regions
+
+def extract_net(mat, atlas, network):
+    res, regions = extract_vec(mat, atlas, network)
     reprojected = vec_to_sym_matrix(res, diagonal=np.zeros((len(regions))))
     return reprojected, regions
 
