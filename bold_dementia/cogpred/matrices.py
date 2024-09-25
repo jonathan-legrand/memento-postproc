@@ -149,7 +149,7 @@ def plot_matrix(
         axes.yaxis.set_major_locator(FixedLocator([(t0 + t1) / 2 for t0, t1 in zip(ticks[:-1], ticks[1:])]))
         axes.xaxis.set_major_locator(FixedLocator([(t0 + t1) / 2 for t0, t1 in zip(ticks[:-1], ticks[1:])]))
         axes.set_yticklabels(lbls, rotation=0)
-        axes.set_xticklabels(lbls, rotation=30)
+        axes.set_xticklabels(lbls, rotation=90)
 
     return axes
 
