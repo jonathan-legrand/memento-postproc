@@ -42,7 +42,7 @@ class MatrixResult:
         )))
 
     def get_macro_matrices(self, agg_func=default_agg_func):
-        """Get a matrices reorganized by networks
+        """Get matrices reorganized by networks
 
         Args:
             agg_func (function, optional): function to compute
