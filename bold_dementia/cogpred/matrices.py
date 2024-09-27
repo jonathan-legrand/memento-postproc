@@ -69,10 +69,20 @@ class MatrixResult:
             self.block = sorted_matrix[loc_a[0]:loc_a[1], loc_b[0]:loc_b[1]]
 
             yield network_a, network_b, *agg_func(self.block)
-    
+
+    def _gen_upper_triangular(self, sorted_matrix, agg_func):
+        for network_a, network_b in upper_triangular_cartesian(self.network_to_idx.index):
+            loc_a, loc_b = self.network_to_idx[network_a], self.network_to_idx[network_b]
+            self.block = sorted_matrix[loc_a[0]:loc_a[1], loc_b[0]:loc_b[1]]
+
+            yield network_a, network_b, *agg_func(self.block)
         
     
-        
+def upper_triangular_cartesian(S):
+   diagonal = [(x, x) for x in S]
+   combinations = list(it.combinations(S, 2))
+   return combinations + diagonal
+    
 
 def compute_mat_size(l, with_diag=False):
     # Mat size is the positive root of :
