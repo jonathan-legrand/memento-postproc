@@ -40,7 +40,9 @@ def run_cv_perms(estimator, matrices, metadata, cv):
 def partial_f1_func(y_test, y_pred):
     return f1_score(y_test, y_pred, average="macro")
 
-def run_cv(estimator, matrices, metadata, cv, score_func=partial_f1_func):
+from sklearn.linear_model import LinearRegression
+
+def run_cv(deconfounder, estimator, matrices, metadata, confounds, cv, score_func=partial_f1_func):
     y = metadata.cluster_label.values.astype(int)
     n_classes = len(np.unique(y))
     scores = []
@@ -50,6 +52,12 @@ def run_cv(estimator, matrices, metadata, cv, score_func=partial_f1_func):
     for i, (train_idx, test_idx) in enumerate(cv.split(matrices, y, groups=metadata.CEN_ANOM.values)):
         X_train, y_train = matrices[train_idx], y[train_idx]
         X_test, y_test = matrices[test_idx], y[test_idx]
+
+        # Deconfounding. ONLY FIT ON TRAIN!
+        deconfounder.fit(confounds[train_idx], X_train)
+        X_train = deconfounder.transform(confounds[train_idx], X_train)
+        X_test = deconfounder.transform(confounds[test_idx], X_test)
+
         estimator.fit(X_train, y_train)
 
         y_pred = estimator.predict(X_test)

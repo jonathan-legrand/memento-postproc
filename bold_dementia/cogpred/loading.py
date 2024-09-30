@@ -80,12 +80,12 @@ def make_all_data(conn_dir, atlas, k, suffix="prediction"):
 
     return matrices, metadata
 
-def make_training_data(conn_dir, atlas, k, test_centre="GOX", suffix="prediction"):
+def make_training_data(conn_dir, atlas, k, test_centre="GOX", suffix="prediction", ses="M000"):
     matrices = joblib.load(f"{conn_dir}/atlas-{atlas}_{suffix}/connectivities.joblib")
     metadata = pd.read_csv(f"{conn_dir}/atlas-{atlas}_{suffix}/metadata.csv", index_col=0)
     labels = pd.read_csv(f"/georges/memento/BIDS/cluster_{k}_labels.csv", index_col=0)
 
-    baseline_msk = (metadata.ses == "M000")
+    baseline_msk = (metadata.ses == ses)
     if test_centre is not None:
         baseline_msk *= (metadata.CEN_ANOM != test_centre)
     
